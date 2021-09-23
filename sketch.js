@@ -52,7 +52,7 @@ function setup() {
 
   // create an engine
   engine = Engine.create();
-
+  engine.world.gravity.scale = 0.0005;
 
 
   group1 = Body.nextGroup(true),
@@ -64,6 +64,8 @@ function setup() {
   compositeConstruction = Composite.create({ label: 'Car'});
 
 
+
+  // wrench bottom circle (black)
   circ01 = Bodies.circle(400, 600, 40, {
     collisionFilter: {
       group: group1
@@ -71,6 +73,7 @@ function setup() {
     density: 0.0002
   });
 
+  // wrench body rect (black)
   rect01 = Bodies.rectangle(360, 300, 80, 300, {
     collisionFilter: {
       group: group1
@@ -78,6 +81,7 @@ function setup() {
     density: 0.0002
   });
 
+  // wrench bottom circle void (white)
   circ02 = Bodies.circle(400, 600, 20, {
     collisionFilter: {
       group: group1
@@ -85,6 +89,7 @@ function setup() {
     density: 0.0002
   });
 
+  // wrench body skinny rect void (white)
   rect02 = Bodies.rectangle(397.5, 320, 5, 270, {
     collisionFilter: {
       group: group1
@@ -92,6 +97,7 @@ function setup() {
     friction: 0.8
   });
 
+  // wrench head circle (black)
   circ03 = Bodies.circle(400, 250, 75, {
     // isStatic: true,
     collisionFilter: {
@@ -100,6 +106,7 @@ function setup() {
     density: 0.0002
   });
 
+  // wrench void rect at head (white)
   rect03 = Bodies.rectangle(430, 250, 60, 110, {
     collisionFilter: {
       group: group1
@@ -110,7 +117,10 @@ function setup() {
     friction: 0.8
   });
 
+  let rotateRect03 = Body.rotate(rect03, -29)
 
+
+// Ties wrench bottom (black) to wrench body (black)
   constraint01 = Constraint.create({
     bodyA: circ01,
     // pointA: offsetA,
@@ -121,6 +131,7 @@ function setup() {
     length: 0
   });
 
+  //Ties wrench bottom circle (black) to wrench bottom circle (black)
   constraint02 = Constraint.create({
     bodyA: circ01,
     // pointA: offsetA,
@@ -131,6 +142,7 @@ function setup() {
     length: 0
   });
 
+  //Ties wrench head circle (black) to wrench body rect (black)
   constraint03 = Constraint.create({
     bodyA: circ03,
     // pointA: offsetA,
@@ -141,36 +153,53 @@ function setup() {
     length: 0
   });
 
+  //Ties wrench body skinny rect void (white) to wrench bottom circle (black)
   constraint04 = Constraint.create({
     bodyA: rect02,
     // pointA: offsetA,
     pointA: { x: 0, y: 150 },
     bodyB: circ01,
-    pointB: { x: 0, y: -0 },
+    pointB: { x: 0, y: 0 },
     stiffness: 0.00001,
     length: 0
   });
 
+  //Ties wrench head circle (black) to wrench body rect void (white)
   constraint05 = Constraint.create({
     bodyA: circ03,
     // pointA: offsetA,
-    pointA: { x: 0, y: 0 },
+    pointA: { x: 0, y: 150 },
     bodyB: rect02,
-    pointB: { x: 0, y: 150 },
+    pointB: { x: 0, y: 0 },
+    stiffness: 0.01,
+    length: 0
+  });
+
+  //Ties wrench head circle (black) to wrench void rect at head (white)
+  constraint06 = Constraint.create({
+    bodyA: circ03,
+    // pointA: offsetA,
+    pointA: { x: -50, y: -20 },
+    bodyB: rect03,
+    pointB: { x: 0, y: 0 },
+    stiffness: 0.01,
+    length: 0
+  });
+
+  constraint07 = Constraint.create({
+    bodyA: circ02,
+    // pointA: offsetA,
+    pointA: { x: 0, y: 120 },
+    bodyB: rect02,
+    pointB: { x: 0, y: 0 },
     stiffness: 0.01,
     length: 0
   });
 
 
-  // Composite.add(compositeConstruction, [circ01, rect01, circ02, rect02, circ03, rect03, constraint01, constraint02, constraint03, constraint04, constraint05]);
-  Composite.add(compositeConstruction, [circ01, rect01, circ02, rect02, circ03, constraint01, constraint02, constraint03, constraint04, constraint05]);
-  // World.add(engine.world, [rect01, rect02, constraint01]);
-  // Composite.add(compositeConstruction, rect02);
-  // Composite.add(compositeConstruction, rect03);
 
 
-  // Composite.add(world, [rect01, rect02, rect03]);
-  // Composite.add(world, [rect])
+  Composite.add(compositeConstruction, [circ01, rect01, circ02, rect02, circ03, rect03, constraint01, constraint02, constraint03, constraint04, constraint05, constraint06, constraint07]);
 
 
   World.add(engine.world, [compositeConstruction]);
