@@ -262,8 +262,8 @@ function draw() {
   background(255);
 
   noStroke();
-  stroke('red');
-  noFill();
+//   stroke('red');
+//   noFill();
   // drawVertices(ball.vertices);
   // drawBodies(bridge.bodies);
 
